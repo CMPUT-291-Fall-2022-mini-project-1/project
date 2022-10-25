@@ -53,44 +53,43 @@ def login() -> None:
     users.pwd = ?
     """
 
-    id = input("input your aid/uid\n")
-    passwd = getpass.getpass("input your password\n")
-    if(id == None or passwd == None or len(id) == 0 or len(passwd) == 0):
-        print("ERROR: id or password is empty\n")
-        login()
+    while True:
+        id = input("input your aid/uid\n")
+        passwd = getpass.getpass("input your password\n")
+        if(id == None or passwd == None or len(id) == 0 or len(passwd) == 0):
+            print("ERROR: id or password is empty\n")
+            continue
 
-    """
-    try login as an artist
-    """
+        """
+        try login as an artist
+        """
 
-    cursor.execute(login_artist_sql_cmd, (id, passwd))
-    response_sql : list = cursor.fetchall()
-    if len(response_sql) == 0:
-        """
-        fail login as an artist
-        try login as a user
-        """
-        cursor.execute(login_user_sql_cmd, (id, passwd))
+        cursor.execute(login_artist_sql_cmd, (id, passwd))
         response_sql : list = cursor.fetchall()
         if len(response_sql) == 0:
-            # login fail
-            print("can't login in, check the user/artists id and password\n")
-            login()
-            pass
+            """
+            fail login as an artist
+            try login as a user
+            """
+            cursor.execute(login_user_sql_cmd, (id, passwd))
+            response_sql : list = cursor.fetchall()
+            if len(response_sql) == 0:
+                # login fail
+                print("can't login in, check the user/artists id and password\n")
+                continue
+            else:
+                uid = response_sql[0][0]
+                user_name = response_sql[0][1]
+                print('login successful, {}\n'.format(user_name))
+                user_system_functionalities(uid, user_name)
+                break
         else:
-            uid = response_sql[0][0]
-            user_name = response_sql[0][1]
-            print('login successful, {}\n'.format(user_name))
-            user_system_functionalities(uid, user_name)
-            pass
-        pass
-    else:
-        aid = response_sql[0][0]
-        artist_name = response_sql[0][1]
-        nationality = response_sql[0][2]
-        print('login successful\n, {}'.format(artist_name))
-        artist_system_functionalities(aid, artist_name, nationality)
-        pass
+            aid = response_sql[0][0]
+            artist_name = response_sql[0][1]
+            nationality = response_sql[0][2]
+            print('login successful\n, {}'.format(artist_name))
+            artist_system_functionalities(aid, artist_name, nationality)
+            break
 
 
 def signup():
@@ -104,7 +103,8 @@ def signup():
     signup_sql_cmd = """
     INSERT INTO users VALUES (?, ?, ?);
     """
-    #TODO
+
+    
     uid = input('Provid a unique uid\n')
     user_name = input('Provid a name\n')
     passwd = getpass.getpass('Provid a password\n')
