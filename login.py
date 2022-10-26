@@ -82,7 +82,12 @@ def login() -> None:
                     login_mode = int(input("Select your login mode (0.user, 1.artist): "))
                     if login_mode not in all_login_modes:
                         raise ValueError
-                    break
+                    else:
+                        if login_mode == 0:
+                            id = res_user[0][0]
+                        else:
+                            id = res_artist[0][0]
+                        break
                 except ValueError:
                     print("Please select a valid option.")
                     continue
