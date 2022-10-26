@@ -31,9 +31,13 @@ def login_screen() -> None:
         print(UI_LOGIN_MAIN)
         try:
             user_select = int(input("Enter your selection: "))
-            login_action[user_select]()
         except ValueError:
             print("Invalid selection!")
+            continue
+        if user_select<=3 and user_select>0:
+            login_action[user_select]()
+        else:
+            print("can't conform your action, try again")
             continue
 
 
@@ -69,7 +73,17 @@ def login() -> None:
             print("Invalid ID or password. Please try again.")
             continue
         if valid_user and valid_artist:
-            login_mode = int(input("Select your login mode (0.user, 1.artist): "))
+            while True:
+                try:
+                    login_mode = int(input("Select your login mode (0.user, 1.artist): "))
+                except:
+                    print("can't conform your login mode, try again")
+                    continue
+                if login_mode>1 or login_mode<0:
+                    print("can't conform your login mode, try again")
+                    continue
+                else:
+                    break
         elif valid_user:
             login_mode = 0
         elif valid_artist:
