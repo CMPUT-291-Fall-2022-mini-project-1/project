@@ -16,12 +16,6 @@ SQL_SIGNUP_USER_CHECK = """
 SELECT users.uid
 FROM users
 WHERE users.uid = ?
-
-UNION
-
-SELECT artists.aid
-FROM artists
-WHERE artists.aid = ?;
 """
 
 SQL_SIGNUP_USER_SUCCESS = """

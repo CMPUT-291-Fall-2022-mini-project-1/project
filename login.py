@@ -31,6 +31,8 @@ def login_screen() -> None:
         print(UI_LOGIN_MAIN)
         try:
             user_select = int(input("Enter your selection: "))
+            if user_select not in login_action:
+                raise ValueError
         except ValueError:
             print("Invalid selection!")
             continue
@@ -69,7 +71,15 @@ def login() -> None:
             print("Invalid ID or password. Please try again.")
             continue
         if valid_user and valid_artist:
-            login_mode = int(input("Select your login mode (0.user, 1.artist): "))
+            while True:
+                try:
+                    login_mode = int(input("Select your login mode (0.user, 1.artist): "))
+                    if login_mode not in all_login_modes:
+                        raise ValueError
+                    break
+                except ValueError:
+                    print("Please select a valid option.")
+                    continue
         elif valid_user:
             login_mode = 0
         elif valid_artist:
@@ -85,11 +95,11 @@ def sign_up():
     # get all user info; make sure uid is unique
     while True:
         new_uid = input("Enter your user id: ")
-        cursor.execute(SQL_SIGNUP_USER_CHECK, (new_uid, new_uid))
+        cursor.execute(SQL_SIGNUP_USER_CHECK, (new_uid,))
         if len(cursor.fetchall()) == 0:
             break
         else:
-            print("A user/artist has used {} as his/her user id. Please choose another user id.".format(new_uid))
+            print("A user has used {} as his/her user id. Please choose another user id.".format(new_uid))
     new_name = input("Enter your user name: ")
     new_pwd = getpass.getpass("Enter your new password: ")
     
