@@ -83,8 +83,10 @@ def login() -> None:
                     print("Please select a valid option.")
                     continue
         elif valid_user:
+            id = res_user[0][0]
             login_mode = 0
         elif valid_artist:
+            id = res_artist[0][0]
             login_mode = 1
         break
     
