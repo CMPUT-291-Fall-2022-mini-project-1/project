@@ -52,6 +52,12 @@ def login() -> None:
     AND
     users.pwd = ?
     """
+    user_or_artirt_sql_cmd = """
+    SELECT uid, aid
+    FROM artists, users
+    WHERE aid = uid
+    and aid = ?;
+    """
 
     while True:
         id = input("input your aid/uid\n")
@@ -60,36 +66,66 @@ def login() -> None:
             print("ERROR: id or password is empty\n")
             continue
 
-        """
-        try login as an artist
-        """
-
-        cursor.execute(login_artist_sql_cmd, (id, passwd))
-        response_sql : list = cursor.fetchall()
-        if len(response_sql) == 0:
-            """
-            fail login as an artist
-            try login as a user
-            """
-            cursor.execute(login_user_sql_cmd, (id, passwd))
+        cursor.execute(user_or_artirt_sql_cmd,(id,))
+        if len(cursor.fetchall())==0:
+            cursor.execute(login_artist_sql_cmd, (id, passwd))
             response_sql : list = cursor.fetchall()
             if len(response_sql) == 0:
-                # login fail
-                print("can't login in, check the user/artists id and password\n")
-                continue
+                """
+                fail login as an artist
+                try login as a user
+                """
+                cursor.execute(login_user_sql_cmd, (id, passwd))
+                response_sql : list = cursor.fetchall()
+                if len(response_sql) == 0:
+                    # login fail
+                    print("can't login in, check the user/artists id and password\n")
+                    continue
+                else:
+                    uid = response_sql[0][0]
+                    user_name = response_sql[0][1]
+                    print('login successful, {}\n'.format(user_name))
+                    user_system_functionalities(uid, user_name)
+                    break
             else:
-                uid = response_sql[0][0]
-                user_name = response_sql[0][1]
-                print('login successful, {}\n'.format(user_name))
-                user_system_functionalities(uid, user_name)
+                aid = response_sql[0][0]
+                artist_name = response_sql[0][1]
+                nationality = response_sql[0][2]
+                print('login successful, {}\n'.format(artist_name))
+                artist_system_functionalities(aid, artist_name, nationality)
                 break
         else:
-            aid = response_sql[0][0]
-            artist_name = response_sql[0][1]
-            nationality = response_sql[0][2]
-            print('login successful\n, {}'.format(artist_name))
-            artist_system_functionalities(aid, artist_name, nationality)
-            break
+            user_selection = input('user or artist\ndefault = user\n')
+            if user_selection == 'artist':
+                cursor.execute(login_artist_sql_cmd, (id, passwd))
+                response_sql : list = cursor.fetchall()
+                if len(response_sql) == 0:
+                    """
+                    fail login as an artist
+                    try login as a user
+                    """
+                    print("can't login in, check the user/artists id and password\n")
+                    continue
+                else:
+                    aid = response_sql[0][0]
+                    artist_name = response_sql[0][1]
+                    nationality = response_sql[0][2]
+                    print('login successful, {}\n'.format(artist_name))
+                    artist_system_functionalities(aid, artist_name, nationality)
+                    break
+            else:
+                cursor.execute(login_user_sql_cmd, (id, passwd))
+                response_sql : list = cursor.fetchall()
+                if len(response_sql) == 0:
+                    # login fail
+                    print("can't login in, check the user/artists id and password\n")
+                    continue
+                else:
+                    uid = response_sql[0][0]
+                    user_name = response_sql[0][1]
+                    print('login successful, {}\n'.format(user_name))
+                    user_system_functionalities(uid, user_name)
+                    break
 
 
 def signup():

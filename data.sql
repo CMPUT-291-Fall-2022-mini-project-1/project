@@ -47,6 +47,7 @@ insert into users values ('u39', 'Kiyan Underwood', '123456');
 insert into users values ('u40', 'Wendy Fernandez', '123456');
 insert into users values ('u41', 'Shamima Gonzales', '123456');
 insert into users values ('u42', 'Mike Smith', '123456');
+insert into users values ('t1', 'test_user_same_id', '123456');
 
 
 --- Songs ---
@@ -967,6 +968,7 @@ insert into artists values ('a36', 'Avril Lavigne', 'Canadian', '123456');
 insert into artists values ('a37', 'Flo Rida', 'American', '123456');
 insert into artists values ('a38', 'Spice Girls', 'British', '123456');
 insert into artists values ('a39', 'Ed Sheeran', 'England', '123456');
+insert into artists values ('t1', 'test_artist_same_id', 'N/A', '123456');
 
 
 
