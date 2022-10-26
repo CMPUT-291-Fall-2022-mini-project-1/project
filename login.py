@@ -112,8 +112,9 @@ def sign_up():
 
 
 def user_system_functionalities(uid: str) -> None:
-    user_mode = UserMode()
-    user_mode.user_system_functionalities()
+    global connection, cursor
+    user_mode = UserMode(uid, connection, cursor)
+    user_mode.start_user()
 
 
 def artist_system_functionalities(aid: str) -> None:
