@@ -38,7 +38,11 @@ def login_screen() -> None:
         except ValueError:
             print("Invalid selection!")
             continue
-        login_action[user_select]()
+        if user_select<=3 and user_select>0:
+            login_action[user_select]()
+        else:
+            print("can't conform your action, try again")
+            continue
 
 
 def login() -> None:
@@ -88,6 +92,8 @@ def login() -> None:
         elif valid_artist:
             id = res_artist[0][0]
             login_mode = 1
+        else:
+            continue
         break
     
     all_login_modes[login_mode](id)
