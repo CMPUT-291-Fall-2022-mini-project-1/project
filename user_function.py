@@ -15,10 +15,14 @@ class UserMode():
 
     def start_session(self) -> bool:
         
+        if self.current_session is not None:
+            print("Start session failed. A session is currectly running.")
+            return False
+        
         self.cur.execute(SQL_USER_START_SESSION_GET_ALL_SESSIONS, (self.uid,))
         res = self.cur.fetchall()
         
-        if len(res) == 0:
+        if res[0][0] is None:
             self.current_session = 1
         else:
             self.current_session = res[0][0] + 1
