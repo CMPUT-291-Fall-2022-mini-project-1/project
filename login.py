@@ -5,6 +5,8 @@ import sys
 from sql_cmd.sql_login import *
 from ui_design.ui_login import *
 
+from user_function import UserMode
+
 debug = True
 connection:sqlite3.Connection = None
 cursor:sqlite3.Cursor = None
@@ -110,9 +112,8 @@ def sign_up():
 
 
 def user_system_functionalities(uid: str) -> None:
-    print("-----------------User System Functionalities-------------------\n")
-    #TODO
-    pass
+    user_mode = UserMode()
+    user_mode.user_system_functionalities()
 
 
 def artist_system_functionalities(aid: str) -> None:
