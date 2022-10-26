@@ -1,3 +1,4 @@
 .vscode/
 t.sql
 data_gen/
+__pycache__/
