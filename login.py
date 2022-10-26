@@ -31,10 +31,10 @@ def login_screen() -> None:
         print(UI_LOGIN_MAIN)
         try:
             user_select = int(input("Enter your selection: "))
+            login_action[user_select]()
         except ValueError:
             print("Invalid selection!")
             continue
-        login_action[user_select]()
 
 
 def login() -> None:
@@ -74,6 +74,8 @@ def login() -> None:
             login_mode = 0
         elif valid_artist:
             login_mode = 1
+        else:
+            continue
         break
     
     all_login_modes[login_mode](id)
