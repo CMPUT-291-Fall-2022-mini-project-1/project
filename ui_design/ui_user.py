@@ -5,5 +5,6 @@ UI_USER_MAIN = """
 - 3. Search for artists
 - 4. End the session
 - 5. Logout
+- 6. Exit
 -----------------User Screen-------------------
 """
