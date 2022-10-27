@@ -3,3 +3,4 @@ t.sql
 data_gen/
 __pycache__/
 database.db
+data.db
