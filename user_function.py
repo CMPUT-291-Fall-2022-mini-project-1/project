@@ -46,7 +46,7 @@ class UserMode():
     def end_session(self) -> bool:
         
         if self.current_session is None:
-            print("No session currently runs.")
+            # print("No session currently runs.")
             return False
 
         self.cur.execute(SQL_USER_END_SESSION_SUCCESS, (self.uid, self.current_session))
@@ -63,7 +63,8 @@ class UserMode():
             "2": self.search_for_songs_playlists,
             "3": self.search_for_artists,
             "4": self.end_session,
-            "5": None
+            "5": self.end_session,
+            "6": self.end_session
         }
         
         # select an action to proceed
@@ -72,10 +73,12 @@ class UserMode():
             if action not in user_action:
                 print("Please make a proper selection.")
                 continue
+            
+            # run that action
+            user_action[action]()
         
             if action == "5":
                 return
-        
-            # run that action
-            user_action[action]()
+            if action == "6":
+                exit()
         
