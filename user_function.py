@@ -34,8 +34,26 @@ class UserMode():
 
 
     def search_for_songs_playlists(self) -> None:
-        # TODO
-        pass
+        
+        # get all keywords
+        while True:
+            keywords = input("Please enter your keywords, separated by spaces: ")
+            keywords = set(keywords.split(" "))
+            keywords.discard("")
+            if len(keywords) == 0:
+                print("Keyword field cannot be empty.")
+                continue
+            keywords = list(keywords)
+            break
+        
+        # get all matched songs & playlist, order by the number of matched keywords
+        sql_songs, kw_input = get_sql_search_songs_playlists(keywords)
+        print(sql_songs, kw_input)
+        self.cur.execute(sql_songs, kw_input)
+        res = self.cur.fetchall()
+        print(res)
+        
+        return
 
 
     def search_for_artists(self) -> None:
