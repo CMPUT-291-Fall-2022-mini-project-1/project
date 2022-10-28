@@ -48,7 +48,6 @@ class UserMode():
         
         # get all matched songs & playlist, order by the number of matched keywords
         sql_songs, kw_input = get_sql_search_songs_playlists(keywords)
-        print(sql_songs, kw_input)
         self.cur.execute(sql_songs, kw_input)
         res = self.cur.fetchall()
         print(res)
