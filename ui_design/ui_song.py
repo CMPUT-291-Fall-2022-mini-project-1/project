@@ -3,7 +3,7 @@ UI_SONG_MAIN = """
 - 1. Listen "{}"
 - 2. More information about "{}"
 - 3. Add it to a playlist
-- 4. Back
+- 4. <---
 - 5. Exit
 -----------------Song actions-------------------
 """
