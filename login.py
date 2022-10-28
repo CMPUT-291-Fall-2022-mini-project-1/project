@@ -139,6 +139,7 @@ def artist_system_functionalities(aid: str) -> None:
 def main(path: str) -> None:
     global connection, cursor
     connect(path)
+    print(UI_WELCOME)
     login_screen()
 
 

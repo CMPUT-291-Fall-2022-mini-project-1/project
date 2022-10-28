@@ -2,7 +2,6 @@ import sqlite3
 import sys
 from sql_cmd.sql_song import *
 from ui_design.ui_song import *
-# from user_function import UserMode
 
 class Song():
     
@@ -16,7 +15,9 @@ class Song():
         if len(res) == 0:
             self.artist = "can't find"
         else:
-            self.artist = res[0][0]
+            self.artist = ""
+            for artist in res:
+                self.artist += artist[0]+", "
         play_lists_tmp = {}
         user.cur.execute(SQL_PLAY_LISTS, (sid,))
         for playlist in user.cur.fetchall():
@@ -58,7 +59,9 @@ class Song():
         for index, pid in user_action.items():
             action_str += "-{}. {}\n".format(str(index), user_playlists[pid])
         user_action[cnt+1] = -1
-        action_str += "-{}. In a new playlist".format(str(cnt+1))
+        user_action[cnt+2] = -1
+        action_str += "-{}. In a new playlist\n".format(str(cnt+1))
+        action_str += "-{}. <---".format(str(cnt+2))
         while True:
             print(UI_PLAYLISTS.format(action_str))
             try:
@@ -85,6 +88,8 @@ class Song():
             self.user.conn.commit()
             self.user.cur.execute(SQL_ADD_PLAYLIST, (pid,self.sid, 1))
             self.user.conn.commit()
+        elif selection == cnt+2:
+            return
         else:
             self.user.cur.execute(SQL_CHECK_PLINCLUDE, (user_action[selection], self.sid))
             if len(self.user.cur.fetchall()) != 0:
@@ -101,12 +106,15 @@ class Song():
                 self.user.conn.commit()
         return
 
+    def passfun(self):
+        return
+
     def select_song(self) -> None:
         user_action = {
             "1":self.listen,
             "2":self.info,
             "3":self.add_playlist,
-            "4":self.user.end_session,
+            "4":self.passfun,
             "5":self.user.end_session,
         }
         while True:
@@ -137,12 +145,13 @@ def connect(path:str) -> None:
     connection.commit()
     return
 
-# def main(path: str) -> None:
-#     global connection, cursor
-#     connect(path)
-#     user_mode = UserMode("t1", connection, cursor)
-#     song = Song(10, "Nice for what", 210, user_mode)
-#     song.select_song()
+def main(path: str) -> None:
+    from user_function import UserMode
+    global connection, cursor
+    connect(path)
+    user_mode = UserMode("t1", connection, cursor)
+    song = Song(10, "Nice for what", 210, user_mode)
+    song.select_song()
 
 
 
@@ -150,4 +159,4 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Database not specified!")
         exit()
-    # main(sys.argv[1])
+    main(sys.argv[1])
