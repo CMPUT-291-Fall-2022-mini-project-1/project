@@ -77,7 +77,6 @@ class UserMode():
 
     def start_user(self) -> None:
     
-        print(UI_USER_MAIN)
         user_action = {
             "1": self.start_session,
             "2": self.search_for_songs_playlists,
@@ -89,6 +88,7 @@ class UserMode():
         
         # select an action to proceed
         while True:
+            print(UI_USER_MAIN)
             action = input("Select an action to proceed: ")
             if action not in user_action:
                 print("Please make a proper selection.")
