@@ -46,8 +46,59 @@ class Song():
         return
 
     def add_playlist(self) -> None:
-        #TODO
-        pass
+        self.user.cur.execute(SQL_CHECK_PLAYLIST, (self.user.uid,))
+        user_playlists = {}
+        user_action = {}
+        cnt = 0
+        for playlist in self.user.cur.fetchall():
+            cnt += 1
+            user_playlists[playlist[0]] = playlist[1]
+            user_action[cnt] = playlist[0]
+        action_str = ""
+        for index, pid in user_action.items():
+            action_str += "-{}. {}\n".format(str(index), user_playlists[pid])
+        user_action[cnt+1] = -1
+        action_str += "-{}. In a new playlist".format(str(cnt+1))
+        while True:
+            print(UI_PLAYLISTS.format(action_str))
+            try:
+                selection = int(input("Select your playlist: "))
+                if selection not in user_action.keys():
+                    raise ValueError
+                else:
+                    break
+            except ValueError:
+                print("Please select a valid option.")
+                continue
+        if selection == cnt+1:
+            while True:
+                title = input("Input new playlist title: ")
+                if title is not None and len(title)!=0:
+                    break
+            self.user.cur.execute(SQL_MAX_PID)
+            res = self.user.cur.fetchall()
+            if res[0][0] is None:
+                pid = 1
+            else:
+                pid = res[0][0]+1
+            self.user.cur.execute(SQL_NEW_PLAYLIST, (pid, title, self.user.uid))
+            self.user.conn.commit()
+            self.user.cur.execute(SQL_ADD_PLAYLIST, (pid,self.sid, 1))
+            self.user.conn.commit()
+        else:
+            self.user.cur.execute(SQL_CHECK_PLINCLUDE, (user_action[selection], self.sid))
+            if len(self.user.cur.fetchall()) != 0:
+                print("already exists")
+                self.user.conn.commit()
+            else:
+                self.user.cur.execute(SQL_ORDER, (user_action[selection],))
+                res = self.user.cur.fetchall()
+                if res[0][0] is None:
+                    order = 1
+                else:
+                    order = res[0][0]+1
+                self.user.cur.execute(SQL_ADD_PLAYLIST, (user_action[selection],self.sid, order))
+                self.user.conn.commit()
         return
 
     def select_song(self) -> None:

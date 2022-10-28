@@ -16,3 +16,9 @@ duration : {}
 playlist(s) : {}
 ---------------- Song Info -------------------
 """
+
+UI_PLAYLISTS = """
+-----------------Select a playlist---------------
+{}
+-----------------Select a playlist---------------
+"""

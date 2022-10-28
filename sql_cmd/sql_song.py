@@ -31,3 +31,36 @@ WHERE listen.uid = ?
 AND listen.sid = ?
 AND listen.sno = ?;
 """
+
+SQL_CHECK_PLAYLIST = """
+SELECT playlists.pid, playlists.title
+FROM playlists
+WHERE playlists.uid = ?;
+"""
+
+SQL_ORDER = """
+SELECT max(plinclude.sorder)
+FROM plinclude
+WHERE plinclude.pid = ?;
+"""
+
+SQL_ADD_PLAYLIST = """
+INSERT INTO plinclude VALUES (?,?,?);
+"""
+
+SQL_NEW_PLAYLIST = """
+INSERT INTO playlists VALUES (?,?,?)
+"""
+
+SQL_MAX_PID = """
+SELECT max(playlists.pid)
+FROM playlists;
+"""
+
+SQL_CHECK_PLINCLUDE = """
+SELECT *
+FROM plinclude
+WHERE plinclude.pid = ?
+AND
+plinclude.sid = ?
+"""
