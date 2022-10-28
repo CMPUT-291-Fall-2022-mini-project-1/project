@@ -32,6 +32,27 @@ class UserMode():
         self.conn.commit()
         
         return True
+    
+    
+    def search_for_artists(self) -> None:
+        
+        # get all keywords
+        while True:
+            keywords = input("Please enter your keywords, separated by spaces: ")
+            keywords = set(keywords.split(" "))
+            keywords.discard("")
+            if len(keywords) == 0:
+                print("Keyword field cannot be empty.")
+                continue
+            keywords = list(keywords)
+            break
+        
+        sql_artists, kw_input = get_sql_search_artists(keywords)
+        self.cur.execute(sql_artists, kw_input)
+        res = self.cur.fetchall()
+        
+        artist_select = search_artists_display(("name", "nationality", "# of songs"), res, self.cur)
+        print(artist_select)
 
 
     def search_for_songs_playlists(self) -> None:
@@ -89,11 +110,6 @@ class UserMode():
         song_action.select_song()
         
         return
-
-
-    def search_for_artists(self) -> None:
-        # TODO
-        pass
 
 
     def end_session(self) -> bool:

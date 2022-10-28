@@ -23,6 +23,53 @@ where songs.sid = plinclude.sid
 and plinclude.pid = ?;
 """
 
+
+SQL_ARTIST_INFO = """
+with asinfo as (
+    select artists.aid, songs.title stitle, artists.name, artists.nationality
+    from artists, perform, songs
+    where artists.aid = perform.aid
+    and perform.sid = songs.sid
+), 
+"""
+
+SQL_SONG_COUNT = """
+select count(sid)
+from perform
+where aid = ?;
+"""
+
+
+def get_sql_search_artists(keywords:list):
+    # get artists matching
+    sql_str = SQL_ARTIST_INFO+"artist_search_collection as ("
+    first = True
+    
+    input_list = []
+    kw_id = 0
+    for k in keywords:
+        if not first:
+            sql_str += " union "
+        first = False
+        sql_str += """
+        select distinct asinfo.aid, asinfo.name, asinfo.nationality, {} kcount
+        from asinfo
+        where lower(asinfo.name) like ?
+        or lower(asinfo.stitle) like ?
+        """.format(kw_id)
+        input_list.extend(["%"+k+"%"]*2)
+        kw_id += 1
+    
+    sql_str += ")"
+    sql_str += """
+    select aid, name, nationality, count(kcount)
+    from artist_search_collection
+    group by aid, name, nationality
+    order by count(kcount) desc;
+    """
+    return sql_str, tuple(input_list)
+
+
 def get_sql_search_songs_playlists(keywords:list):
     # get songs matching
     sql_str = "with song_search_collection as ("
