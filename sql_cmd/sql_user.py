@@ -16,6 +16,13 @@ where lower(uid) = lower(?)
 and sno = ?;
 """
 
+SQL_USER_EXPAND_PLAYLIST = """
+select songs.sid, songs.title, songs.duration
+from songs, plinclude
+where songs.sid = plinclude.sid
+and plinclude.pid = ?;
+"""
+
 def get_sql_search_songs_playlists(keywords:list):
     # get songs matching
     sql_str = "with song_search_collection as ("

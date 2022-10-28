@@ -53,6 +53,36 @@ class UserMode():
         
         # get user selection
         user_select = search_songs_playlists_display(("type", "id", "title", "duration"), res)
+        
+        if user_select is None:
+            return
+        
+        # expand playlists to songs if user select a playlist
+        if user_select[0] == "playlist":
+            self.cur.execute(SQL_USER_EXPAND_PLAYLIST, (user_select[1],))
+            song_res = self.cur.fetchall()
+            
+            song_dict = {}
+            
+            # print out the songs
+            print("All songs in playlist {} (id | title | duration):".format(user_select[2]))
+            for i in range(len(song_res)):
+                song_dict[str(i)] = song_res[i]
+                (sid, title, duration) = song_res[i]
+                print("-%2d. %10d | %50s | %10d" % (i, sid, title, duration))
+            
+            # let user select one
+            while True:
+                selection = input("Choose a song or press ENTER to cancel: ")
+                if selection == "":
+                    return
+                elif selection not in song_dict:
+                    print("Please make a valid selection.")
+                else:
+                    s_song = song_dict[selection]
+                    user_select = ('songs', s_song[0], s_song[1], s_song[2], 0)
+                    break
+        
         print(user_select)
         
         return
