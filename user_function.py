@@ -50,7 +50,10 @@ class UserMode():
         sql_songs, kw_input = get_sql_search_songs_playlists(keywords)
         self.cur.execute(sql_songs, kw_input)
         res = self.cur.fetchall()
-        print(res)
+        
+        # get user selection
+        user_select = search_songs_playlists_display(("type", "id", "title", "duration"), res)
+        print(user_select)
         
         return
 
