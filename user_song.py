@@ -2,11 +2,11 @@ import sqlite3
 import sys
 from sql_cmd.sql_song import *
 from ui_design.ui_song import *
-from user_function import UserMode
+# from user_function import UserMode
 
 class Song():
     
-    def __init__(self, sid:int, name:str, duration:int, user:UserMode) -> None:
+    def __init__(self, sid:int, name:str, duration:int, user) -> None:
         self.sid = sid
         self.name = name
         self.duration = duration
@@ -137,12 +137,12 @@ def connect(path:str) -> None:
     connection.commit()
     return
 
-def main(path: str) -> None:
-    global connection, cursor
-    connect(path)
-    user_mode = UserMode("t1", connection, cursor)
-    song = Song(10, "Nice for what", 210, user_mode)
-    song.select_song()
+# def main(path: str) -> None:
+#     global connection, cursor
+#     connect(path)
+#     user_mode = UserMode("t1", connection, cursor)
+#     song = Song(10, "Nice for what", 210, user_mode)
+#     song.select_song()
 
 
 
@@ -150,4 +150,4 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Database not specified!")
         exit()
-    main(sys.argv[1])
+    # main(sys.argv[1])

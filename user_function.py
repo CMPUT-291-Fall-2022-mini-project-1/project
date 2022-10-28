@@ -3,6 +3,7 @@ import sqlite3
 from typing import List
 from ui_design.ui_user import *
 from sql_cmd.sql_user import *
+from user_song import Song
 
 
 class UserMode():
@@ -83,7 +84,9 @@ class UserMode():
                     user_select = ('songs', s_song[0], s_song[1], s_song[2], 0)
                     break
         
-        print(user_select)
+        # start the song action
+        song_action = Song(user_select[1], user_select[2], user_select[3], self)
+        song_action.select_song()
         
         return
 
