@@ -88,6 +88,7 @@ class Song():
             self.user.conn.commit()
             self.user.cur.execute(SQL_ADD_PLAYLIST, (pid,self.sid, 1))
             self.user.conn.commit()
+            self.playlists[pid] = title
         elif selection == cnt+2:
             return
         else:
@@ -104,6 +105,7 @@ class Song():
                     order = res[0][0]+1
                 self.user.cur.execute(SQL_ADD_PLAYLIST, (user_action[selection],self.sid, order))
                 self.user.conn.commit()
+                self.playlists[user_action[selection]] = user_playlists[user_action[selection]]
         return
 
     def passfun(self):
