@@ -23,6 +23,13 @@ where songs.sid = plinclude.sid
 and plinclude.pid = ?;
 """
 
+SQL_USER_EXPAND_ARTIST = """
+select songs.sid, songs.title, songs.duration
+from songs, perform
+where songs.sid = perform.sid
+and perform.aid = ?;
+"""
+
 
 SQL_ARTIST_INFO = """
 with asinfo as (

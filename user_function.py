@@ -47,12 +47,47 @@ class UserMode():
             keywords = list(keywords)
             break
         
+        # get all matched artists, order by the number of matched keywords
         sql_artists, kw_input = get_sql_search_artists(keywords)
         self.cur.execute(sql_artists, kw_input)
         res = self.cur.fetchall()
         
-        artist_select = search_artists_display(("name", "nationality", "# of songs"), res, self.cur)
-        print(artist_select)
+        # get user selection
+        user_select = search_artists_display(("name", "nationality", "# of songs"), res, self.cur)
+        
+        if user_select is None:
+            return
+        
+        # expand artists to songs
+        self.cur.execute(SQL_USER_EXPAND_ARTIST, (user_select[0],))
+        song_res = self.cur.fetchall()
+        
+        song_dict = {}
+        
+        # print out the songs
+        print("All songs performed by {} (id | title | duration):".format(user_select[1]))
+        for i in range(len(song_res)):
+            song_dict[str(i)] = song_res[i]
+            (sid, title, duration) = song_res[i]
+            print("-%2d. %10d | %50s | %10d" % (i, sid, title, duration))
+        
+        # let user select one
+        while True:
+            selection = input("Choose a song or press ENTER to cancel: ")
+            if selection == "":
+                return
+            elif selection not in song_dict:
+                print("Please make a valid selection.")
+            else:
+                s_song = song_dict[selection]
+                user_select = ('songs', s_song[0], s_song[1], s_song[2], 0)
+                break
+        
+        # start the song action
+        song_action = Song(user_select[1], user_select[2], user_select[3], self)
+        song_action.select_song()
+        
+        return
 
 
     def search_for_songs_playlists(self) -> None:
