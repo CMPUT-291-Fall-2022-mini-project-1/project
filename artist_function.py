@@ -1,6 +1,5 @@
 import sqlite3
 
-from typing import List
 from ui_design.ui_artist import *
 from sql_cmd.sql_artist import *
 
@@ -56,6 +55,7 @@ class ArtistMode():
                 continue
             break
 
+        # check if the songs already exists
         self.cur.execute(SQL_ARTIST_CHECK_SONG_EXIST,
                          (self.aid, title, duration))
         res = self.cur.fetchall()
@@ -63,17 +63,20 @@ class ArtistMode():
         if (len(res) > 0):
             print("This song already exists!")
         else:
+            # retrieve the new id by getting the max sid
             self.cur.execute(SQL_ARTIST_GET_NEW_SID)
             new_sid = self.cur.fetchall()
             sid = int(new_sid[0][0]) + 1
 
+            # update the songs table
             self.cur.execute(SQL_ARTIST_INSERT_INTO_SONGS,
                              (sid, title, duration))
             self.conn.commit()
+
+            # update the perform table.
             self.cur.execute(SQL_ARTIST_INSERT_INTO_PERFORM,
                              (self.aid, sid))
             self.conn.commit()
-            print("Insert successful")
 
     def find_top_fan_playlist(self) -> None:
         titles = ("Type", "Name")
@@ -84,12 +87,15 @@ class ArtistMode():
                          (self.aid,))
         results = self.cur.fetchall()
 
+        # display top users for this artist
         i = find_top_users_playlists_display(
             results, 1)
 
         self.cur.execute(SQL_ARTIST_GET_TOP_PLAYLISTS,
                          (self.aid,))
         results = self.cur.fetchall()
+
+        # display top playlists for this artist
         find_top_users_playlists_display(
             results, i)
 
