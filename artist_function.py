@@ -3,7 +3,6 @@ import sqlite3
 from typing import List
 from ui_design.ui_artist import *
 from sql_cmd.sql_artist import *
-from user_song import Song
 
 
 class ArtistMode():
@@ -50,6 +49,10 @@ class ArtistMode():
                 duration = round(float(duration))
             except ValueError:
                 print("Please enter a numeric duration")
+                continue
+
+            if (duration < 0):
+                print("Please enter a valid duration")
                 continue
             break
 
