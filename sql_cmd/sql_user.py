@@ -47,11 +47,11 @@ where aid = ?;
 """
 
 
-def get_sql_search_artists(keywords:list):
+def get_sql_search_artists(keywords: list):
     # get artists matching
     sql_str = SQL_ARTIST_INFO+"artist_search_collection as ("
     first = True
-    
+
     input_list = []
     kw_id = 0
     for k in keywords:
@@ -66,7 +66,7 @@ def get_sql_search_artists(keywords:list):
         """.format(kw_id)
         input_list.extend(["%"+k+"%"]*2)
         kw_id += 1
-    
+
     sql_str += ")"
     sql_str += """
     select aid, name, nationality, count(kcount)
@@ -77,11 +77,11 @@ def get_sql_search_artists(keywords:list):
     return sql_str, tuple(input_list)
 
 
-def get_sql_search_songs_playlists(keywords:list):
+def get_sql_search_songs_playlists(keywords: list):
     # get songs matching
     sql_str = "with song_search_collection as ("
     first = True
-    
+
     input_list = []
     kw_id = 0
     for k in keywords:
@@ -95,7 +95,7 @@ def get_sql_search_songs_playlists(keywords:list):
         """.format(kw_id)
         input_list.append("%"+k+"%")
         kw_id += 1
-    
+
     # get duration for each pid
     sql_str += "), "
     sql_str += """
@@ -116,11 +116,11 @@ def get_sql_search_songs_playlists(keywords:list):
         )
     ), 
     """
-    
+
     # get playlist matching
     sql_str += "playlist_search_collection as ("
     first = True
-    
+
     kw_id = 0
     for k in keywords:
         if not first:
@@ -133,7 +133,7 @@ def get_sql_search_songs_playlists(keywords:list):
         """.format(kw_id)
         input_list.append("%"+k+"%")
         kw_id += 1
-    
+
     # union the two & order by keyword count
     sql_str += "), total_search_collection as ("
     sql_str += """
@@ -144,12 +144,12 @@ def get_sql_search_songs_playlists(keywords:list):
     from playlist_search_collection
     )
     """
-    
+
     sql_str += """
     select type, id, title, duration, count(kcount)
     from total_search_collection
     group by type, id, title, duration
     order by count(kcount) desc;
     """
-    
+
     return sql_str, tuple(input_list)
