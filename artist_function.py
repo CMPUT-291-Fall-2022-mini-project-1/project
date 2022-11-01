@@ -73,13 +73,22 @@ class ArtistMode():
             print("Insert successful")
 
     def find_top_fan_playlist(self) -> None:
-        self.cur.execute(SQL_ARTIST_GET_TOP_USERS_PLAYLIST,
-                         (self.aid, self.aid))
+        titles = ("Type", "Name")
+        print("-----------------Search Result--------------------")
+        print("-     %10s %50s" % titles)
+
+        self.cur.execute(SQL_ARTIST_GET_TOP_USERS,
+                         (self.aid,))
+        results = self.cur.fetchall()
+
+        i = find_top_users_playlists_display(
+            results, 1)
+
+        self.cur.execute(SQL_ARTIST_GET_TOP_PLAYLISTS,
+                         (self.aid,))
         results = self.cur.fetchall()
         find_top_users_playlists_display(
-            ("Type", "Name"), results)
-        # for i in users:
-        #     print(i)
+            results, i)
 
     def end(self) -> None:
         return

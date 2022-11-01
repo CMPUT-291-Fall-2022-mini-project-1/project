@@ -12,11 +12,10 @@ UI_ARTIST_MAIN = """
 """
 
 
-def find_top_users_playlists_display(titles, display_cols):
-    print("-----------------Search Result--------------------")
-    print("-     %10s %50s" % titles)
-    i = 1
+def find_top_users_playlists_display(display_cols, i):
+    i = i
 
     for c in display_cols:
         print("- %3d %10s %50s " % (i, c[0], c[1]))
         i += 1
+    return i
