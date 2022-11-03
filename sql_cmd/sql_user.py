@@ -37,6 +37,13 @@ with asinfo as (
     from artists, perform, songs
     where artists.aid = perform.aid
     and perform.sid = songs.sid
+    union all
+    select artists.aid, NULL stitle, artists.name, artists.nationality
+    from artists
+    where artists.aid not in (
+        select aid
+        from perform
+    )
 ), 
 """
 
